@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>360&deg; Image Gallery</title>
+    <meta name="description" content="360&deg; Image Gallery - A-Frame">
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-layout-component@5.3.0/dist/aframe-layout-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component@2.1.0/dist/aframe-proxy-event-component.min.js"></script>
+    
+    <!-- Image link template to be reused. -->
+    <script id="link" type="text/html">
+      <a-entity class="link"
+        geometry="primitive: plane; height: 1; width: 1"
+        material="shader: flat; src: ${thumb}"
+        event-set__mouseenter="scale: 1.2 1.2 1"
+        event-set__mouseleave="scale: 1 1 1"
+        event-set__click="_target: #image-360; _delay: 300; material.src: ${src}"
+        proxy-event="event: click; to: #image-360; as: fade"
+        sound="on: click; src: ${audio}"></a-entity>
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img id="scene1" crossorigin="anonymous" src="images/scene1.JPG">
+        <img id="scene1-thumb" crossorigin="anonymous" src="buttons/button1.png">
+        <img id="scene2" crossorigin="anonymous" src="images/scene2.JPG">
+        <img id="scene2-thumb" crossorigin="anonymous" src="buttons/button2.png">
+        <img id="scene3" crossorigin="anonymous" src="images/scene3.JPG">
+        <img id="scene3-thumb" crossorigin="anonymous" src="buttons/button3.png">
+        <img id="scene4" crossorigin="anonymous" src="images/scene4.JPG">
+        <img id="scene4-thumb" crossorigin="anonymous" src="buttons/button4.png">
+        <img id="scene5" crossorigin="anonymous" src="images/scene5.JPG">
+        <img id="scene5-thumb" crossorigin="anonymous" src="buttons/button5.png">
+        <audio id="scene1audio" crossorigin="anonymous" src="audio/audio1.m4a"></audio>
+		<audio id="scene2audio" crossorigin="anonymous" src="audio/audio2.m4a"></audio>
+		<audio id="scene3audio" crossorigin="anonymous" src="audio/audio3.m4a"></audio>
+		<audio id="scene4audio" crossorigin="anonymous" src="audio/audio4.m4a"></audio>
+		<audio id="scene5audio" crossorigin="anonymous" src="audio/audio5.m4a"></audio>
+      </a-assets>
+
+      <!-- 360-degree image. -->
+      <a-sky id="image-360" radius="10" src="#scene1"
+             animation__fade="property: components.material.material.color; type: color; from: #FFF; to: #000; dur: 300; startEvents: fade"
+             animation__fadeback="property: components.material.material.color; type: color; from: #000; to: #FFF; dur: 300; startEvents: animationcomplete__fade"></a-sky>
+
+      <!-- Image links. -->
+      <a-entity id="links" layout="type: line; margin: 1.5" position="-3 -1 -4">
+		<a-entity template="src: #link" data-src="#scene1" data-thumb="#scene1-thumb" data-audio="#scene1audio"></a-entity>
+        <a-entity template="src: #link" data-src="#scene2" data-thumb="#scene2-thumb" data-audio="#scene2audio"></a-entity>
+		<a-entity template="src: #link" data-src="#scene3" data-thumb="#scene3-thumb" data-audio="#scene3audio"></a-entity>
+		<a-entity template="src: #link" data-src="#scene4" data-thumb="#scene4-thumb" data-audio="#scene4audio"></a-entity>
+		<a-entity template="src: #link" data-src="#scene5" data-thumb="#scene5-thumb" data-audio="#scene5audio"></a-entity>
+      </a-entity>
+
+      <!-- Camera + cursor. -->
+      <a-entity camera look-controls>
+        <a-cursor
+          id="cursor"
+          animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
+          animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
+          event-set__mouseenter="_event: mouseenter; color: springgreen"
+          event-set__mouseleave="_event: mouseleave; color: black"
+          raycaster="objects: .link"></a-cursor>
+      </a-entity>
+      <!-- Controls for Meta quest and similar headsets -->
+
+	  
+	   <a-entity laser-controls="hand: right" line="color: red"></a-entity>
+    </a-scene>
+  </body>
+</html>
